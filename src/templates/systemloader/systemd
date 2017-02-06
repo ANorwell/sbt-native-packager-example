@@ -1,0 +1,22 @@
+[Unit]
+Description=${{descr}}
+Requires=${{start_facilities}}
+
+[Service]
+Type=simple
+WorkingDirectory=${{chdir}}
+EnvironmentFile=${{env_config}}
+ExecStart=${{chdir}}/bin/${{exec}}
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=${{retryTimeout}}
+SuccessExitStatus=${{SuccessExitStatus}}
+User=${{daemon_user}}
+ExecStartPre=/bin/mkdir -p /run/${{app_name}}
+ExecStartPre=/bin/chown ${{daemon_user}}:${{daemon_group}} /run/${{app_name}}
+ExecStartPre=/bin/chmod 755 /run/${{app_name}}
+PermissionsStartOnly=true
+LimitNOFILE=16384
+
+[Install]
+WantedBy=multi-user.target
